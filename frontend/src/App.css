@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	--bg-dark: #010a42;
+	--bg-darkblue: #1c255b;
+	--bg-muted-darkblue: #252f6e;
+	--darkblue: #262e69;
+	--yellow: #ffb12a;
+	--red: #ff2e62;
+	--green: #01cb87;
+	--beige: #ffeac6;
+	--pink: #ffc1c2;
+	--purple: #6259ff;
+	--lightgrey: #f7f7f7;
+	--grey: #bbb;
+	--darkgrey: #333;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--bg-dark);
+	min-height: 100vh;
+	margin: 0;
+	padding: 0;
+}
+
+/* TODO to change into tailwind css */
+.loadingSpinnerContainer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: var(--highlight-green);
+	z-index: 5000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.loadingSpinner {
+	width: 64px;
+	height: 64px;
+	border: 8px solid;
+	border-color: #000 transparent #555 transparent;
+	border-radius: 50%;
+	animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
