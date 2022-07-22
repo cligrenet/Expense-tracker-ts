@@ -13,4 +13,12 @@ export class PrismaService extends PrismaClient {
       },
     });
   }
+  // Teardown logic before running e2e test
+  cleanDb() {
+    // Make sure things are done in a specific order, use $transation
+    return this.$transaction([
+      this.transaction.deleteMany(),
+      this.user.deleteMany(),
+    ]);
+  }
 }
