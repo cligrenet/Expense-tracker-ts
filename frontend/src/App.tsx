@@ -1,11 +1,24 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Home from './pages/Home';
+import Income from './pages/Income';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
 	return (
-		<div>
-			<h1 className="text-3xl font-bold underline text-yellow">Expense Tracker</h1>
-		</div>
+		<>
+			<Router>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/income" element={<Income />} />
+					<Route path="/expense" element={<Income />} />
+					<Route path="/auth/login" element={<Login />} />
+					<Route path="/auth/signup" element={<Signup />} />
+				</Routes>
+			</Router>
+		</>
 	);
 }
 
