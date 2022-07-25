@@ -46,6 +46,6 @@ export default (state: any, action: any) => {
 				user: null,
 			};
 		default:
-			throw new Error('Unknown action ' + action.type);
+			throw new Error('Unknown action ' + action.typest);
 	}
 };
