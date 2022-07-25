@@ -9,6 +9,7 @@ async function bootstrap() {
       whitelist: true, // Strip out elements which are not defined in the dto
     }),
   );
+  app.enableCors();
   await app.listen(3333);
 }
 bootstrap();
