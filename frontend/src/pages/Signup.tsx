@@ -6,12 +6,13 @@ import { GlobalContext } from '../context/GlobalState';
 
 const Signup = () => {
 	const [formData, setFormData] = useState({
+		firstName: '',
 		email: '',
 		password: '',
 		password2: '',
 	});
 
-	const { email, password, password2 } = formData;
+	const { firstName, email, password, password2 } = formData;
 
 	const navigate = useNavigate();
 
@@ -44,7 +45,7 @@ const Signup = () => {
 		if (password !== password2) {
 			toast.error('Passwords do not match');
 		} else {
-			const userData = { email, password, password2 };
+			const userData = { firstName, email, password, password2 };
 
 			signup(userData);
 		}
@@ -58,7 +59,7 @@ const Signup = () => {
 			</section>
 			<section>
 				<form onSubmit={onSubmit}>
-					{/* <div>
+					<div>
 						<input
 							className="form-input block w-full rounded-lg bg-slate-300 focus:bg-slate-100 mb-2"
 							type="text"
@@ -70,18 +71,7 @@ const Signup = () => {
 							required
 						/>
 					</div>
-					<div>
-						<input
-							className="form-input block w-full rounded-lg bg-slate-300 focus:bg-slate-100 mb-2"
-							type="text"
-							id="lastName"
-							name="lastName"
-							value={lastName}
-							onChange={onChange}
-							placeholder="Enter your last name"
-							required
-						/>
-					</div> */}
+
 					<div>
 						<input
 							className="form-input block w-full rounded-lg bg-slate-300 focus:bg-slate-100 mb-2"
@@ -123,7 +113,7 @@ const Signup = () => {
 					</div>
 				</form>
 			</section>
-			<Link to="/auth/login" className="flex items-center justify-center text-slate-300  hover:text-yellow">
+			<Link to="/login" className="flex items-center justify-center text-slate-300  hover:text-yellow">
 				<FaSignInAlt className="mr-2" /> Login
 			</Link>
 		</div>

@@ -82,7 +82,7 @@ const Login = () => {
 					</div>
 				</form>
 			</section>
-			<Link to="/auth/signup" className="flex items-center justify-center text-slate-300  hover:text-yellow">
+			<Link to="/signup" className="flex items-center justify-center text-slate-300  hover:text-yellow">
 				<FaUser className="mr-2" /> Signup
 			</Link>
 		</div>
