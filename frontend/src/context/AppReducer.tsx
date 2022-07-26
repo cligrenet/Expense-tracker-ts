@@ -45,6 +45,46 @@ export default (state: any, action: any) => {
 			return {
 				user: null,
 			};
+		case 'GET_TRANSACTIONS':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsSuccess: true,
+				transactions: action.payload,
+			};
+		case 'DELETE_TRANSACTION':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsSuccess: true,
+				transactions: state.transactions.filter(
+					(transaction: { transaction_id: string }) => transaction.transaction_id !== action.payload,
+				),
+			};
+		case 'ADD_TRANSACTION':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsSuccess: true,
+				transactions: [action.payload, ...state.transactions],
+			};
+		case 'TRANSACTION_ERROR':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsError: true,
+				transactionsError: action.payload,
+			};
+		case 'TRANSACTIONS_SORT':
+			return {
+				...state,
+				transactionsSortingDirection: action.payload,
+			};
+		case 'TRANSACTIONS_FILTER_BY_CATEGORY':
+			return {
+				...state,
+				transactionsSelectedCategories: action.payload,
+			};
 		default:
 			throw new Error('Unknown action ' + action.typest);
 	}

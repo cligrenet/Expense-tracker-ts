@@ -19,15 +19,18 @@ export interface UserData {
 }
 
 export interface Transaction {
-	id: number;
+	id?: number;
 	text: string;
 	amount: number;
 	category: string;
-	userId: number;
+	userId?: number;
+	createdAt?: string;
+	updatedAt?: string;
+	type?: string;
 }
 
 export interface GlobalContextType {
-	user: { userId: string; email: string; assess_token: string };
+	user: { userId: string; firstName?: string; lastName?: string; email: string; access_token: string };
 	isAuthError: boolean;
 	isAuthSuccess: boolean;
 	isAuthLoading: boolean;
@@ -36,6 +39,20 @@ export interface GlobalContextType {
 	signup: (userData: UserData) => void;
 	login: (userData: UserData) => void;
 	logout: () => void;
+
+	transactions: Array<Transaction>;
+	transactionsError: string;
+	isTransactionsError: boolean;
+	isTransactionsSuccess: boolean;
+	isTransactionsLoading: boolean;
+	transactionsSortingDirection: string;
+	transactionsSelectedCategories: string[];
+
+	getTransactions: (token: string) => void;
+	deleteTransaction: (transactionId: number, token: string) => void;
+	addTransaction: (transaction: Transaction, token: string) => void;
+	toggleTransactionSortDirection: () => void;
+	handleTransactionsSelectedCategories: (newCategories: string[]) => void;
 }
 
 //// Initial state
@@ -49,13 +66,27 @@ const initialState = {
 	signup: () => {},
 	login: () => {},
 	logout: () => {},
+
+	transactions: [],
+	transactionsError: '',
+	isTransactionsError: false,
+	isTransactionsSuccess: false,
+	isTransactionsLoading: true,
+	transactionsSortingDirection: 'desc',
+	transactionsSelectedCategories: [],
+
+	getTransactions: () => {},
+	deleteTransaction: () => {},
+	addTransaction: () => {},
+	toggleTransactionSortDirection: () => {},
+	handleTransactionsSelectedCategories: () => {},
 };
 
 //// Create context
 export const GlobalContext = createContext<GlobalContextType>(initialState);
 
 //// Provider component
-export const GlobalProvider = ({ children }: { children: any }) => {
+export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 	const [state, dispatch] = useReducer(AppReducer, initialState);
 
 	// NOTE Actions => make calls to the reducer, make changes to initial state
@@ -81,7 +112,10 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 			console.log({ err });
 			dispatch({
 				type: 'SIGNUP_FAILED',
-				payload: err.response.data.message,
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
 			});
 		}
 	}
@@ -107,7 +141,10 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 			console.log(typeof err, err);
 			dispatch({
 				type: 'LOGIN_FAILED',
-				payload: err.response.data.message,
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
 			});
 		}
 	}
@@ -118,6 +155,118 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 
 		dispatch({
 			type: 'LOGOUT_SUCCESS',
+		});
+	}
+
+	// Fetch transactions
+	// Add queries into URL to do sorting and filtering
+	async function getTransactions(token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			let filters = '';
+
+			if (state.transactionsSelectedCategories) {
+				filters =
+					'&' +
+					state.transactionsSelectedCategories
+						.map((category: string) => {
+							return `filters[]=${encodeURI(category)}`;
+						})
+						.join('&');
+			}
+
+			const res = await axios.get(
+				`/transactions?sort_direction=${state.transactionsSortingDirection}${filters}`,
+				config,
+			);
+			// console.log('GlobalState fetch transactions', res.data.data);
+
+			dispatch({
+				type: 'GET_TRANSACTIONS',
+				payload: res.data,
+			});
+		} catch (err: any) {
+			console.log(err);
+			dispatch({
+				type: 'TRANSACTION_ERROR',
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
+			});
+		}
+	}
+
+	// Delete transaction
+	async function deleteTransaction(transactionId: number, token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			await axios.delete(`/transactions/${transactionId}`, config);
+			dispatch({ type: 'DELETE_TRANSACTION', payload: transactionId });
+		} catch (err: any) {
+			console.log(err);
+			dispatch({
+				type: 'TRANSACTION_ERROR',
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
+			});
+		}
+	}
+
+	// Create transaction
+	async function addTransaction(transaction: Transaction, token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+				},
+			};
+
+			const res = await axios.post('/transactions', transaction, config);
+			// console.log('GlobalState create transaction', res.data);
+
+			dispatch({
+				type: 'ADD_TRANSACTION',
+				payload: res.data,
+			});
+		} catch (err: any) {
+			console.log(err);
+			dispatch({
+				type: 'TRANSACTION_ERROR',
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
+			});
+		}
+	}
+
+	// Sort transactions
+	async function toggleTransactionSortDirection() {
+		dispatch({
+			type: 'TRANSACTIONS_SORT',
+			payload: state.transactionsSortingDirection === 'asc' ? 'desc' : 'asc',
+		});
+	}
+
+	// Filter transactions by category
+	function handleTransactionsSelectedCategories(newCategories: string[]) {
+		dispatch({
+			type: 'TRANSACTIONS_FILTER_BY_CATEGORY',
+			payload: newCategories,
 		});
 	}
 
@@ -132,6 +281,18 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 				signup,
 				login,
 				logout,
+				transactions: state.transactions,
+				transactionsError: state.transactionsError,
+				isTransactionsError: state.isTransactionsError,
+				isTransactionsLoading: state.isTransactionsLoading,
+				isTransactionsSuccess: state.isTransactionsSuccess,
+				transactionsSortingDirection: state.transactionsSortingDirection,
+				transactionsSelectedCategories: state.transactionsSelectedCategories,
+				getTransactions,
+				deleteTransaction,
+				addTransaction,
+				toggleTransactionSortDirection,
+				handleTransactionsSelectedCategories,
 			}}
 		>
 			{children}
