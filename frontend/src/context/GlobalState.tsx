@@ -81,7 +81,7 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 			console.log({ err });
 			dispatch({
 				type: 'SIGNUP_FAILED',
-				payload: err.message,
+				payload: err.response.data.message,
 			});
 		}
 	}
@@ -104,10 +104,10 @@ export const GlobalProvider = ({ children }: { children: any }) => {
 				payload: response.data,
 			});
 		} catch (err: any) {
-			console.log({ err });
+			console.log(typeof err, err);
 			dispatch({
 				type: 'LOGIN_FAILED',
-				payload: err.message,
+				payload: err.response.data.message,
 			});
 		}
 	}
