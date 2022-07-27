@@ -10,7 +10,7 @@ axios.defaults.baseURL = 'http://localhost:3333';
 const user = JSON.parse(localStorage.getItem('user'));
 
 // Types
-export interface UserData {
+export interface UserInterface {
 	firstName?: string;
 	lastName?: string;
 	email: string;
@@ -18,7 +18,7 @@ export interface UserData {
 	password2?: string;
 }
 
-export interface Transaction {
+export interface TransactionInterface {
 	id?: number;
 	text: string;
 	amount: number;
@@ -29,15 +29,15 @@ export interface Transaction {
 	type?: string;
 }
 
-export interface GlobalContextType {
+export interface GlobalContextInterface {
 	user: { userId: string; firstName?: string; lastName?: string; email: string; access_token: string };
 	isAuthError: boolean;
 	isAuthSuccess: boolean;
 	isAuthLoading: boolean;
 	authMessage: string | null;
 
-	signup: (userData: UserData) => void;
-	login: (userData: UserData) => void;
+	signup: (userData: UserInterface) => void;
+	login: (userData: UserInterface) => void;
 	logout: () => void;
 
 	transactions: Array<Transaction>;
@@ -83,7 +83,7 @@ const initialState = {
 };
 
 //// Create context
-export const GlobalContext = createContext<GlobalContextType>(initialState);
+export const GlobalContext = createContext<GlobalContextInterface>(initialState);
 
 //// Provider component
 export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
@@ -92,7 +92,7 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 	// NOTE Actions => make calls to the reducer, make changes to initial state
 
 	// Signup user
-	async function signup(userData: UserData) {
+	async function signup(userData: UserInterface) {
 		dispatch({
 			type: 'SIGNUP_LOADING',
 		});
@@ -121,7 +121,7 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 	}
 
 	// Login user
-	async function login(userData: { email: string; password: string }) {
+	async function login(userData: UserInterface) {
 		dispatch({
 			type: 'LOGIN_LOADING',
 		});

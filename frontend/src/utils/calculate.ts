@@ -1,6 +1,6 @@
-import { Transaction } from '../context/GlobalState';
+import { TransactionInterface } from '../context/GlobalState';
 
-export const calcIncomeTotal = (transactions: Array<Transaction>) => {
+export const calcIncomeTotal = (transactions: Array<TransactionInterface>) => {
 	return transactions
 		? transactions
 				.map((transaction) => transaction.amount)
@@ -10,7 +10,7 @@ export const calcIncomeTotal = (transactions: Array<Transaction>) => {
 		: 0;
 };
 
-export const calcExpenseTotal = (transactions: Array<Transaction>) => {
+export const calcExpenseTotal = (transactions: Array<TransactionInterface>) => {
 	return transactions
 		? (
 				transactions

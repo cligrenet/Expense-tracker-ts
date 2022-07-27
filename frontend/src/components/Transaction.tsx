@@ -4,9 +4,9 @@ import { numberWithCommas } from '../utils/format';
 import { motion } from 'framer-motion';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { Transaction as TransactionType } from '../context/GlobalState';
+import {  TransactionInterface } from '../context/GlobalState';
 
-const Transaction = ({ transaction }: { transaction: TransactionType }) => {
+const Transaction = ({ transaction }: { transaction: TransactionInterface }) => {
 	const { user, deleteTransaction, isTransactionsError, transactionsError } = useContext(GlobalContext);
 
 	const sign = transaction.amount > 0 ? '+' : '-';

@@ -3,7 +3,7 @@ import { GlobalContext } from '../context/GlobalState';
 import { MdAdd } from 'react-icons/md';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
-// import { Transaction } from '../context/GlobalState';
+// import { TransactionInterface } from '../context/GlobalState';
 
 // React Modal
 const customStyles: Modal.Styles = {
