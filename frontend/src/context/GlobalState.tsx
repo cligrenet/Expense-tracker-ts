@@ -40,7 +40,7 @@ export interface GlobalContextInterface {
 	login: (userData: UserInterface) => void;
 	logout: () => void;
 
-	transactions: Array<Transaction>;
+	transactions: Array<TransactionInterface>;
 	transactionsError: string;
 	isTransactionsError: boolean;
 	isTransactionsSuccess: boolean;
@@ -50,7 +50,7 @@ export interface GlobalContextInterface {
 
 	getTransactions: (token: string) => void;
 	deleteTransaction: (transactionId: number, token: string) => void;
-	addTransaction: (transaction: Transaction, token: string) => void;
+	addTransaction: (transaction: TransactionInterface, token: string) => void;
 	toggleTransactionSortDirection: () => void;
 	handleTransactionsSelectedCategories: (newCategories: string[]) => void;
 }
@@ -226,7 +226,7 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 	}
 
 	// Create transaction
-	async function addTransaction(transaction: Transaction, token: string) {
+	async function addTransaction(transaction: TransactionInterface, token: string) {
 		try {
 			const config = {
 				headers: {
