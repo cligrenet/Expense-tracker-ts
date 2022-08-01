@@ -57,7 +57,11 @@ export class AuthService {
     // If password incorrect, throw error
     if (!pwdMatches) throw new ForbiddenException('Credentials incorrect');
 
-    return this.signToken(user.id, user.email);
+    delete user.hash;
+    // return user;
+    // return this.signToken(user.id, user.email);
+
+    return Object.assign(user, await this.signToken(user.id, user.email));
   }
 
   // Helper function sign token
@@ -65,8 +69,8 @@ export class AuthService {
     userId: number,
     email: string,
   ): Promise<{
-    userId: number;
-    email: string;
+    // userId: number;
+    // email: string;
     access_token: string;
   }> {
     const payload = {
@@ -83,8 +87,8 @@ export class AuthService {
     });
 
     return {
-      userId,
-      email,
+      // userId,
+      // email,
       access_token: token,
     };
   }
