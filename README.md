@@ -110,3 +110,11 @@ Testing:
 
 -   Backend: `127.0.0.1:3333`
 -   Frontend: `127.0.0.1:3000`
+
+## Screen shots
+
+![alt text](https://github.com/cligrenet/Expense-tracker-ts/blob/main/frontend/public/main.png 'main')
+![alt text](https://github.com/cligrenet/Expense-tracker-ts/blob/main/frontend/public/expenses.png 'expenses')
+![alt text](https://github.com/cligrenet/Expense-tracker-ts/blob/main/frontend/public/modal.png 'add transaction modal')
+![alt text](https://github.com/cligrenet/Expense-tracker-ts/blob/main/frontend/public/login.png 'log in')
+![alt text](https://github.com/cligrenet/Expense-tracker-ts/blob/main/frontend/public/signup.png 'sign up')
