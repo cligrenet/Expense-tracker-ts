@@ -85,6 +85,18 @@ export default (state: any, action: any) => {
 				...state,
 				transactionsSelectedCategories: action.payload,
 			};
+		//TODO
+		case 'GET_USER':
+			return {
+				...state,
+				user: action.payload,
+			};
+		//TODO
+		case 'EDIT_USER':
+			return {
+				...state,
+				user: action.payload,
+			};
 		default:
 			throw new Error('Unknown action ' + action.typest);
 	}

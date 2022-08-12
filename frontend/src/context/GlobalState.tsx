@@ -53,6 +53,9 @@ export interface GlobalContextInterface {
 	addTransaction: (transaction: TransactionInterface, token: string) => void;
 	toggleTransactionSortDirection: () => void;
 	handleTransactionsSelectedCategories: (newCategories: string[]) => void;
+
+	getMe: (token: string) => void;
+	editUser: (userId: number, token: string, newUserData: UserInterface) => void;
 }
 
 //// Initial state
@@ -80,6 +83,9 @@ const initialState = {
 	addTransaction: () => {},
 	toggleTransactionSortDirection: () => {},
 	handleTransactionsSelectedCategories: () => {},
+
+	getMe: () => {},
+	editUser: () => {},
 };
 
 //// Create context
@@ -103,6 +109,7 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 			if (response.data) {
 				localStorage.setItem('user', JSON.stringify(response.data));
 			}
+			// console.log("signup ", response.data);
 
 			dispatch({
 				type: 'LOGIN_SUCCESS',
@@ -132,6 +139,7 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 			if (response.data) {
 				localStorage.setItem('user', JSON.stringify(response.data));
 			}
+			// console.log("login" ",response.data);
 
 			dispatch({
 				type: 'LOGIN_SUCCESS',
@@ -270,6 +278,49 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 		});
 	}
 
+	// TODO
+	// Fetch current user complete data
+	async function getMe(token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			const res = await axios.get('/users/me', config);
+			console.log('GlobalState get user', res.data);
+
+			dispatch({
+				type: 'GET_USER',
+				payload: res.data.data,
+			});
+		} catch (err: any) {
+			console.log(err);
+		}
+	}
+
+	// TODO
+	async function editUser(userId: number, token: string, newUserData: UserInterface) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					body: newUserData,
+				},
+			};
+			const res = await axios.patch(`/users/${userId}`, config);
+			console.log('GlobalState eidt user', res.data);
+
+			dispatch({
+				type: 'EDIT_USER',
+				payload: res.data.data,
+			});
+		} catch (err: any) {
+			console.log(err);
+		}
+	}
+
 	return (
 		<GlobalContext.Provider
 			value={{
@@ -293,6 +344,8 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 				addTransaction,
 				toggleTransactionSortDirection,
 				handleTransactionsSelectedCategories,
+				getMe,
+				editUser,
 			}}
 		>
 			{children}
