@@ -52,6 +52,20 @@ export default (state: any, action: any) => {
 				isTransactionsSuccess: true,
 				transactions: action.payload,
 			};
+		case 'GET_INCOMES':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsSuccess: true,
+				transactions: action.payload,
+			};
+		case 'GET_EXPENSES':
+			return {
+				...state,
+				isTransactionsLoading: false,
+				isTransactionsSuccess: true,
+				transactions: action.payload,
+			};
 		case 'DELETE_TRANSACTION':
 			return {
 				...state,

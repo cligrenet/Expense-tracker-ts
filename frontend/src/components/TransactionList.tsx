@@ -7,7 +7,6 @@ import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
 import { FaFilter, FaListUl, FaSortAmountDown, FaSortAmountUpAlt } from 'react-icons/fa';
 import FiltersModal from './FiltersModal';
-// import { categories } from '../utils/categoriesData';
 
 const TransactionList = () => {
 	// States from context
@@ -18,12 +17,12 @@ const TransactionList = () => {
 		isTransactionsError,
 		isTransactionsLoading,
 		getTransactions,
+		getIncomes,
+		getExpenses,
 		transactionsSortingDirection,
 		toggleTransactionSortDirection,
 		transactionsSelectedCategories,
 		handleTransactionsSelectedCategories,
-		// getIncomes,
-		// getExpenses,
 	} = useContext(GlobalContext);
 
 	const location = useLocation();
@@ -46,12 +45,12 @@ const TransactionList = () => {
 			case '/':
 				getTransactions(user.access_token);
 				break;
-			// case '/income':
-			// getIncomes(user.token);
-			// break;
-			// case '/expense':
-			// getExpenses(user.token);
-			// break;
+			case '/income':
+				getIncomes(user.access_token);
+				break;
+			case '/expense':
+				getExpenses(user.access_token);
+				break;
 			default:
 				getTransactions(user.access_token);
 		}

@@ -49,6 +49,8 @@ export interface GlobalContextInterface {
 	transactionsSelectedCategories: string[];
 
 	getTransactions: (token: string) => void;
+	getIncomes: (token: string) => void;
+	getExpenses: (token: string) => void;
 	deleteTransaction: (transactionId: number, token: string) => void;
 	addTransaction: (transaction: TransactionInterface, token: string) => void;
 	toggleTransactionSortDirection: () => void;
@@ -79,6 +81,8 @@ const initialState = {
 	transactionsSelectedCategories: [],
 
 	getTransactions: () => {},
+	getIncomes: () => {},
+	getExpenses: () => {},
 	deleteTransaction: () => {},
 	addTransaction: () => {},
 	toggleTransactionSortDirection: () => {},
@@ -197,6 +201,94 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 			dispatch({
 				type: 'GET_TRANSACTIONS',
 				payload: res.data,
+			});
+		} catch (err: any) {
+			console.log(err);
+			dispatch({
+				type: 'TRANSACTION_ERROR',
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
+			});
+		}
+	}
+
+	async function getIncomes(token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			let filters = '';
+
+			if (state.transactionsSelectedCategories) {
+				filters =
+					'&' +
+					state.transactionsSelectedCategories
+						.map((category: string) => {
+							return `filters[]=${encodeURI(category)}`;
+						})
+						.join('&');
+			}
+
+			const res = await axios.get(
+				`/transactions?sort_direction=${state.transactionsSortingDirection}${filters}`,
+				config,
+			);
+			// console.log('GlobalState fetch transactions', res.data.data);
+
+			const incomes = await res.data.filter((transaction: TransactionInterface) => transaction.amount > 0);
+
+			dispatch({
+				type: 'GET_INCOMES',
+				payload: incomes,
+			});
+		} catch (err: any) {
+			console.log(err);
+			dispatch({
+				type: 'TRANSACTION_ERROR',
+				payload:
+					typeof err.response.data.message === 'string'
+						? err.response.data.message
+						: err.response.data.message[0],
+			});
+		}
+	}
+
+	async function getExpenses(token: string) {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			let filters = '';
+
+			if (state.transactionsSelectedCategories) {
+				filters =
+					'&' +
+					state.transactionsSelectedCategories
+						.map((category: string) => {
+							return `filters[]=${encodeURI(category)}`;
+						})
+						.join('&');
+			}
+
+			const res = await axios.get(
+				`/transactions?sort_direction=${state.transactionsSortingDirection}${filters}`,
+				config,
+			);
+			// console.log('GlobalState fetch transactions', res.data.data);
+
+			const expenses = await res.data.filter((transaction: TransactionInterface) => transaction.amount < 0);
+
+			dispatch({
+				type: 'GET_EXPENSES',
+				payload: expenses,
 			});
 		} catch (err: any) {
 			console.log(err);
@@ -340,6 +432,8 @@ export const GlobalProvider = ({ children }: { children: JSX.Element }) => {
 				transactionsSortingDirection: state.transactionsSortingDirection,
 				transactionsSelectedCategories: state.transactionsSelectedCategories,
 				getTransactions,
+				getIncomes,
+				getExpenses,
 				deleteTransaction,
 				addTransaction,
 				toggleTransactionSortDirection,
