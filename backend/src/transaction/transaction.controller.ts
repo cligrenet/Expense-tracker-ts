@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from '../auth/decorator';
@@ -29,9 +30,15 @@ export class TransactionController {
     return this.transactionService.addTransaction(userId, dto);
   }
 
+  //TODO add sort and category filter
+  // /transactions?sort_direction=desc&
+  // /transactions?sort_direction=undefined&filters[]=Education_Training&filters[]=Entertainment&filters[]=Food_Grocery&filters[]=Bank_Fees
   @Get()
-  getTransactions(@GetUser('id') userId: number) {
-    return this.transactionService.getTransactions(userId);
+  getTransactions(
+    @Query() query: { sort_direction: string; filters: string | '' },
+    @GetUser('id') userId: number,
+  ) {
+    return this.transactionService.getTransactions(query, userId);
   }
 
   @Get(':id')

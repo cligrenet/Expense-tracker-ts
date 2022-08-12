@@ -16,11 +16,23 @@ export class TransactionService {
     return transaction;
   }
 
-  getTransactions(userId: number) {
+  //TODO add sort and category filter
+  getTransactions(query: any, userId: number) {
     return this.prisma.transaction.findMany({
       where: {
         userId,
+        category: {
+          in:
+            query.filters &&
+            query.filters.length > 0 &&
+            query.filters.map((c: string) => c),
+        },
       },
+      orderBy: [
+        {
+          createdAt: query.sort_direction === 'desc' ? 'desc' : 'asc',
+        },
+      ],
     });
   }
 
