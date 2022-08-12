@@ -7,7 +7,7 @@ export class AuthDto {
 
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName?: string;
 
   @IsString()
   @IsNotEmpty()
